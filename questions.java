@@ -13,13 +13,13 @@ public class questions {
                     return head;
                ListNode slow=head;
                ListNode fast=head;
-               while(fast!=null && fast.next!=null){
+               while(fast.next!=null && fast.next.next!=null){
                    slow=slow.next;
                    fast=fast.next.next;
                 }
                return slow;
            }
-       }    //remove kth node
+          //remove kth node
        
            public ListNode removeNthFromEnd(ListNode head, int n) {
                if(head==null || head.next==null)
@@ -105,5 +105,98 @@ public class questions {
           return head;
         }
 
-       
+        public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+            if(l1==null || l2==null)
+                 return l1 != null ? l1 : l2;
+            ListNode dummy= new ListNode(-1);
+            ListNode prev= dummy;
+            ListNode c1= l1, c2=l2;
+            while(c1 != null && c2 != null){
+                if(c1.val<c2.val){
+                    prev.next=c1;
+                    c1=c1.next;
+                 }else{
+                    prev.next=c2;
+                    c2=c2.next;
+                }
+                prev=prev.next;
+            }
+            prev.next= c1 != null ? c1 : c2;
+            return dummy.next;
+        }
+        //mergeSort in linkedlist
+        public ListNode sortList(ListNode head) {
+            if(head==null || head.next==null)
+                 return head;
+        ListNode mid= middleNode(head);
+        ListNode nhead= mid.next;
+        mid.next= null;
+        
+        ListNode leftSortedList= sortList(head);
+        ListNode rightSortedList= sortList(nhead);
+        return mergeTwoLists(leftSortedList, rightSortedList);
+            
+        }
+        //Intersection of LL
+        public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+            return findIntersection(headA, headB);
+        }
+        
+        public int findLength(ListNode node){
+            if(node==null)
+                return 0;
+            ListNode curr= node;
+            int len= 0;
+            while(curr!=null){
+                curr=curr.next;
+                len++;
+            }
+            return len;
+        }
+        
+        public ListNode findIntersection(ListNode one, ListNode two){
+            int a= findLength(one);
+            int b= findLength(two);
+            
+            ListNode biggerNode= a > b ? one : two;
+            ListNode smallerNode= b < a ? two : one;
+            
+            int diff= Math.abs(a-b);
+            
+            while(diff-->0){
+                biggerNode= biggerNode.next;
+            }
+            
+            while(biggerNode != smallerNode){
+                biggerNode= biggerNode.next;
+                smallerNode= smallerNode.next;
+            }
+            
+            return smallerNode!=null ? smallerNode : null;
+            
+        }
+
+        public boolean isPalindrome(ListNode head) {
+            // if(head==null || head.next==null)
+            //      return true;
+            ListNode mid= middleNode(head);
+            ListNode nhead= mid.next;
+            mid.next=null;
+            
+            nhead=reverseList(nhead);
+            ListNode c1=head, c2=nhead;
+            boolean ans=true;
+            while(c2!=null){
+                if(c1.val != c2.val){
+                    ans=false;
+                    break;
+                }
+                c1= c1.next;
+                c2= c2.next;
+            }
+            nhead=reverseList(nhead);
+            mid.next=nhead;
+            return ans;
+        }
+    }   
 }
